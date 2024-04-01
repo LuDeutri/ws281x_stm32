@@ -100,6 +100,15 @@ void ws281x_settOff();
 void setLED(uint8_t LEDnum, color_t color);
 
 /*
+ * Set the RGB data for the given leds.
+ * Starting with the 'firstLed' index all follow leds will be set until 'numberOfLeds' are lightning.
+ * @param color color_t element which store the RGB data of the color
+ * @param firstLed index of the first LED which should be set
+ * @param numberOfLeds total number of leds which should be set
+ */
+void setSpecificLEDs(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
+
+/*
  * Set all LEDs which are controlled by this mcu
  * The led is not updated until ws281x_send() is called.
  * @param color color_t element which store the RGB data of the color
@@ -124,6 +133,19 @@ uint8_t getBrightness();
  */
 void calculateLedDataWithBrightness();
 
+
+#define IDX_STARTING_LED 1
+#define IDX_NUM_LIGHTNING_LEDS 0
+/*
+ * Calculate and return the number of controller for the given number of leds
+ * If WS2812 is used, the same number is returned.
+ * If WS2811 is used, the number is divided by 3. If the given number can not be divided by 3 without a rest,
+ * the number will be incresed (idx=false) / decreased (idx=true) until its possible
+ * @param numLed 0-255
+ * @param idx set true (IDX_STARTING_LED) if the given number is the index of the starting led. Set false (IDX_NUM_LIGHTNING_LEDS) if its the number of Leds which sould lighting.
+ * @return number of controller of the leds
+ */
+uint8_t translateNumLeds_WS2811_WS2812(uint8_t numLed, bool idx);
 
 /*
  * HAL function overwrite to detect the end of the DMA conversation.

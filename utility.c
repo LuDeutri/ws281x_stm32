@@ -18,6 +18,7 @@ int getRandomNumberInRange(int min, int max) {
 
 uint8_t getRandom_u8(uint8_t min, uint8_t max){
 	if(min>max) return 0;
+	if(max>=255) max = 254;
 
 	uint8_t range = abs(max-min)+1;
 	return ((rand() % range) + min);

@@ -51,9 +51,6 @@ extern size_t colorFadeRegSize;
 extern color_t colorBlinkReg[];
 extern size_t colorBlinkRegSize;
 
-extern color_t colorRainbowReg[];
-extern size_t colorRainbowRegSize;
-
 /*
  * Translate HSV (hue, saturation, value) color code into RGB (red, green, blue)
  * @param hue 0-359, angle in the color wheel
@@ -72,5 +69,12 @@ color_t hsv_to_rgb(float hue, float saturation, float brightness);
  * @return color_t elemt based on given temperature
  */
 color_t getColorForTemperature(uint8_t temperature);
+
+/*
+ * Calculate rainbow colors.
+ * @param changeRate is the factor for the color difference per led
+ * @return color_t rainbow color for one led
+ */
+color_t calculateRainbowColor(uint8_t changeRate);
 
 #endif

@@ -1,8 +1,8 @@
 #include "color.h"
 
 const color_t off = {0, 0, 0};
-const color_t red = {237, 28, 26};
-const color_t romanticRed = {255, 209, 194};
+const color_t red = {255, 0, 0};
+const color_t romanticRed = {237, 28, 26};
 const color_t gold = {181, 154, 84};
 const color_t orange = {255, 127, 0};
 const color_t yellow = {255, 255, 0};
@@ -108,4 +108,43 @@ color_t getColorForTemperature(uint8_t temperature) {
 
     // Default: Return the color at the last position
     return FlameColorsPalette.entries[FlameColorsPalette.numEntries - 1].color;
+}
+
+
+color_t calculateRainbowColor(uint8_t changeRate){
+	color_t color;
+
+	uint8_t phase = changeRate / 51;
+	uint8_t level = changeRate % 51;
+
+	switch( phase ){
+	     case 0:
+	       color.r   = 255;
+	       color.g = level * 5;
+	       color.b  = 0;
+	       break;
+	     case 1:
+	       color.r   = 255 - level * 5;
+	       color.g = 255;
+	       color.b  = 0;
+	       break;
+	     case 2:
+	       color.r   = 0;
+	       color.g = 255;
+	       color.b  = level * 5;
+	       break;
+	     case 3:
+	       color.r   = 0;
+	       color.g = 255 - level * 5;
+	       color.b  = 255;
+	       break;
+	     case 4:
+	       color.r   = level * 5;
+	       color.g = 0;
+	       color.b  = 255;
+	       break;
+	     default:
+	       color.r = color.g = color.b = 255;
+	   }
+	return color;
 }

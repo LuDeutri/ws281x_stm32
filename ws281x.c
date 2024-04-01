@@ -22,9 +22,8 @@ bool dataSentFlag; // True if DMA action is finished and the next one can start
 void ws281x_init(void) {
 	dataSentFlag = 0; // Initial DMA conversation status
 
-	// Set number of leds
-	if(USE_WS2811) numberLeds = (numberLeds / 3);
-	else 			numberLeds = numberLeds;
+	// Set number of controller of the leds depending if WS2811 or WS2812 is used
+	numberLeds = translateNumLeds_WS2811_WS2812(NUM_LED, false);
 
 	// Set Brightness initial value
 	if(ENABLE_BRIGHTNESS)
@@ -77,6 +76,7 @@ void ws281x_send (void){
 }
 
 void setLED(uint8_t LEDnum, color_t color){
+
 	// Validate paramters
 	if(color.r % 2 != 0) color.r--;
 	if(color.g % 2 != 0) color.g--;
@@ -86,6 +86,22 @@ void setLED(uint8_t LEDnum, color_t color){
 	ledData[LEDnum][0] = color.b;
 	ledData[LEDnum][1] = color.r;
 	ledData[LEDnum][2] = color.g;
+}
+
+void setSpecificLEDs(color_t color, uint8_t firstLed, uint8_t numberOfLeds){
+	// If the ws2811 is used, one controller is used for 3 leds
+	firstLed = translateNumLeds_WS2811_WS2812(firstLed, true);
+	numberOfLeds = translateNumLeds_WS2811_WS2812(numberOfLeds, false);
+
+	// Check parameter
+	if(numberOfLeds > NUM_LED)
+		numberOfLeds = NUM_LED;
+	if(firstLed+numberOfLeds >= NUM_LED)
+		firstLed = NUM_LED - numberOfLeds;
+
+
+	for(uint8_t i = firstLed; i < firstLed+numberOfLeds; i++)
+		setLED(i,color);
 }
 
 void setAllLEDs(color_t color){
@@ -126,6 +142,23 @@ uint8_t getBrightness(){
 void ws281x_settOff(){
 	setAllLEDs(off);
 	ws281x_send();
+}
+
+uint8_t translateNumLeds_WS2811_WS2812(uint8_t numLed, bool idx){
+	if(USE_WS2811){
+		// If the number is lower than 3, return 0. In this case the first 3 LED of the first controller are lightning. Less is with WS2811 not possible.
+		if(numLed < 3 && idx) return 0; 	// IDX_STARTING_LED
+		if(numLed < 3 && !idx) return 1; 	// IDX_NUM_LIGHTNING_LEDS
+
+		// Be sure the given number can be devided by 3
+		while(numLed % 3 != 0){
+			if(idx == IDX_NUM_LIGHTNING_LEDS) numLed++;
+			else numLed--;
+		}
+		// Divide the result by 3
+		numLed /= 3;
+	}
+	return numLed;
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){

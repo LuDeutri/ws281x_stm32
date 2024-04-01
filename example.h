@@ -8,19 +8,25 @@
 #include "color.h"
 
 //  ------- Blink light simulation -----------
-#define BLINK_PERIODEN_TIME 1000
-#define BLINK_CHANGE_COLOR_TIME 1000
+// If you want to blink one time per color BLINK_PERIODEN_TIME and BLINK_CHANGE_COLOR_TIME must be the same
+// If you want (for example) to blink 2 times per color, BLINK_PERIODEN_TIME must be the half of BLINK_CHANGE_COLOR_TIME
+#define BLINK_PERIODEN_TIME 1000 // Blink faster with an low value: 1000 means 500ms on, 500ms off
+#define BLINK_CHANGE_COLOR_TIME 1000 // Change the color after 1000ms
 
 
 //  ------- Fade light simulation -----------
+// Time per brightness level
 #define FADE_TIME 30
 
 
 //  ------- Rainbow simulation -----------
-#define RAINBOW_LED_SAME_COLOR 2
+// Number of leds which are showing the same color
+#define RAINBOW_COLOR_CHANGE_FACTOR 15 // If higher the color difference per led is higher
+#define RAINBOW_DELAY 100 // change the color again after X milliseconds
 
 
 //  ------- Running light simulation -----------
+// Time one led is lighting
 #define RUNNING_LIGHT_TIME 100
 
 
@@ -38,17 +44,21 @@
 
 
 /*
- * Blink all leds in one color
+ * Blink all leds with index inside the given parameters in one color
  * @param color color_t element for the shown color
+ * @param firstLed index of the first LED which should be set
+ * @param numberOfLeds total number of leds which should be set
  */
-void blinkOneColor(color_t color);
+void blinkOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
 
 /*
  * Blink all leds in the same color. Change the color after BLINK_CHANGE_COLOR_TIME
  * @param color pointer to a register list with color_t elements
  * @param size number of elements in color register
+ * @param firstLed index of the first LED which should be set
+ * @param numberOfLeds total number of leds which should be set
  */
-void blinkColors(color_t* color, size_t size);
+void blinkColors(color_t* color, size_t size, uint8_t firstLed, uint8_t numberOfLeds);
 
 /*
  * Fade all LEDs without changing the color or sequence settings
@@ -60,16 +70,20 @@ void fadeAll();
  * Fade one color. FADE_TIME defines the time per brightness level
  * ENABLE_BRIGHTNESS (ws281x.h) must be 1 (brightness must be enabled) otherwise the method stops immediately
  * @param color color_t element for the faded color
+ * @param firstLed index of the first LED which should be set
+ * @param numberOfLeds total number of leds which should be set
  */
-void fadeOneColor(color_t color);
+void fadeOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
 
 /*
  * Fade colors which are stored in the given color register.
  * ENABLE_BRIGHTNESS (ws281x.h) must be 1 (brightness must be enabled) otherwise the method stops immediately
  * @param color register of color_t elements
  * @param size number ob elemts in color register
+ * @param firstLed index of the first LED which should be set
+ * @param numberOfLeds total number of leds which should be set
  */
-void fadeColors(color_t color[], size_t size);
+void fadeColors(color_t color[], size_t size, uint8_t firstLed, uint8_t numberOfLeds);
 
 /*
  * Show rainbow led simulation. Colors are fixed in example.c setted and can be changed there.
@@ -82,8 +96,9 @@ void rainbow();
  * @param color of the running light
  * @param offset at which led the running light should start
  * @param direction 1 running forward, -1 running backward
+ * @return true if one cylce is done, otherwise always false
  */
-void runningLight(color_t color, uint8_t offset, int8_t direction);
+bool runningLight(color_t color, uint8_t offset, int8_t direction);
 
 /*
  * Cyclon lieght simulation
@@ -95,6 +110,7 @@ void cyclon();
  * @param direction defines the base and the direction of the flame 0: LED0 = base, 1: LED_NUM-1 = base,
  */
 void fire(uint8_t direction);
+
 
 
 #endif
