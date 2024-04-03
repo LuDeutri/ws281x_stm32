@@ -12,10 +12,24 @@ To use this libary in your project you have to do following steps:
 
 
 # Settings in the .ioc:
- * System clock: 72 Mhz
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/ec8e1c6e-852f-4a23-b266-676ce76d7a26)
+
+ * System clock: 72 MHz: Make sure that the timer clock which you are using for your PWM data signal for the leds is also 72 MHz
+
+## Timer
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/cae1c71b-bb91-4471-b707-c388221947f6)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/2798c76b-db0b-433c-9ea3-c9c7a2d6b516)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/09e2bb1d-0646-4b09-ba16-66b18cf7e17a)
+
+ * TIM Prescaler: 0
+ * TIM ARR: 90-1     // ARR = Sys_clk / 800000
+   * If you are using an other system clock frequence, you have to re calculate the ARR for the timer.
+
 
 ## DMA
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/31bd80bb-69da-46a4-9e1a-9ccbd67d8104)
+Should be set automtaically if you added the DMA in the timer settings before.
+
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/92ba7984-5581-4643-8146-894de376d872)
  * Direction: Memory to Peripheral
  * Mode: Normal
  * Priority: Medium
@@ -24,27 +38,19 @@ To use this libary in your project you have to do following steps:
  * Memory Increment Address: checked
  * Memory Data Width: Byte
 
-## Timer
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/b4f02c6e-d710-4765-8c59-a689897efb2f)
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/98479e97-f638-447f-8704-6d1a521874ea)
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/87eb4285-8c20-45d7-abea-5e02a8f29d38)
-
- * TIM Prescaler: 0
- * TIM ARR: 90-1     // ARR = Sys_clk / 800000
-   * If you are using an other system clock frequence, you have to re calculate the ARR for the timer.
-
 # Settings in the ws281x.h:
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/9b9ab66f-761a-4953-90bd-00ffd03d2da1)
-
-  * WS2811
-    * 0: WS2812 Leds
-    * 1: WS2811 Leds
-  * NUM_LED
-    * Total number of leds
-  * ENABLE_BRIGTHNESS
-    * 0: Birghtness control is disabled. Fading functions will not work without that.
-    * 1: Brightness control is activated.
-  * BRIGHTNESS_DEFAULT
-    * 0: min
-    * 45: max 
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/6134a18b-bc01-4437-a57a-15a76f3b8b19)
+* Sychronize the uC HAL with your used uC. Here it is used the STM32F1
+* Sychronize the project include paths if your are using constants. If not let this part empty.
+* WS2811
+  * 0: WS2812 Leds
+  * 1: WS2811 Leds
+* NUM_LED
+  * Total number of leds
+* ENABLE_BRIGTHNESS
+  * 0: Birghtness control is disabled. Fading functions will not work without that.
+  * 1: Brightness control is activated.
+* BRIGHTNESS_DEFAULT
+  * 0: min
+  * 45: max 
 Synchronize the defined variables with the .ioc settings
