@@ -1,4 +1,5 @@
 # WS2811/12 with STM32
+(WS2812 is not tested)
 This Libary gives simple basic functions to control an ws2811/12 led strip with a stm32 processor.
 It is based on an Timer with PWM Output and a DMA.
 To use this libary in your project you have to do following steps:
