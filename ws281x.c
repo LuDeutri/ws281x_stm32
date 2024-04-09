@@ -11,7 +11,7 @@ bool dataSentFlag; // True if DMA action is finished and the next one can start
 
 #if USE_WS2811
 	uint8_t ledData[NUM_LED/3][3]; // Store led color data in RGB
-	uint8_t ledMod[NUM_LED/3][3]; // Store led color data in RGB
+	uint8_t ledMod[NUM_LED/3][3]; // Store led color data in RGB with brightness modification
 	uint8_t pwmData[24*NUM_LED/3]; // Store led color and brightness data in bit format for the WS281x Led's
 #else
 	uint8_t ledData[NUM_LED][3];
@@ -112,6 +112,8 @@ void setAllLEDs(color_t color){
 void calculateLedDataWithBrightness(){
 	if(!ENABLE_BRIGHTNESS)
 		return;
+	if(brightness > 45)
+		brightness = 45;
 
 	for (int i=0; i<numberLeds; i++){
 		for (int j=0; j<3; j++){

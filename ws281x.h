@@ -7,9 +7,9 @@
  * If you are using an other clock speed, you have to calculate the new ARR for the timer which is used
  * for the PWM data signal and modify the defined constants below.
  *
- * Set the following settings in the ioc:
+ * Set the following settings in the .ioc:
  *
- * System clock: 72 Mhz
+ * System clock: 72 MHz
  *
  * Timer
  * TIM Prescaler: 0
@@ -29,6 +29,7 @@
 #ifndef __ws281x
 #define __ws281x
 
+// Standard library includes
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -37,40 +38,42 @@
 #include <math.h>
 #include <stdarg.h>
 
+// STM32 processor includes
+#include <stm32f1xx_hal.h>	// used uC hal
+#include"../Core/Inc/main.h" // main header file
+
+// ws281x specific functions
 #include "example.h"
 #include "utility.h"
 #include "color.h"
 
+
+// Your own project specific includes
 #include "../config.h"
 
 
 // --------------- To set by user ---------------------------
-// Here defined setttings are only used here and not written in the main.c
+
+#define USE_WS2811 1	// WS2811: 1 , WS2812: 0 // WS2812 untested!
+
+#define NUM_LED 6				// Total number of leds, doesn't matter if WS2812 or WS2811
+#define ENABLE_BRIGHTNESS 1		// 1: enables brightness control of the leds, if deactivated it is always 100% (fading and other light simulations wont work)
+#define BRIGTHNESS_DEFAULT 40	// Default setted brightness, allowed value 0 - 45
+
+// Here defined settings are only used here and not written in the main.c
 // You have to set the same adjustments in the .ioc
-
-// In the WS2811 led strip are 3 leds controlled by one IC.
-// In the WS2812 led strip every led has is one controller IC included.
-// ------- WS2812 control is not tested !! -----------
-// The reset period can be reduced for the WS2812 (not implemented)
-#define USE_WS2811 1	// WS2811: 1 , WS2812: 0
-
-//(NUM_LED defined in config.h)
-//#define NUM_LED 				// Total number of leds controlled by mcu doesnt matter if 2812 or 2811
-
 #define SYS_CLK 72000000 		// Sys clk frequence of the stm32 uC
-#define TIMER &htim1			// Used timer for the led data PWM signal
-#define TIMER_CHANNEL TIM_CHANNEL_1		// Used Timer channel used for the led data PWM signal
+#define TIMER &htim2			// Used timer for the led data PWM signal
+#define TIMER_CHANNEL TIM_CHANNEL_4		// Used timer channel used for the led data PWM signal
 #define TIM_PRESCALER 0			// Prescaler settings in the .ioc
 #define TIM_ARR 90      		// (SYS_CLK / TIM_ARR) = 800 kHz
 
-#define ENABLE_BRIGHTNESS 1		// 1 enables brigthness control of the LEDs, if deacitvated it is always 100% (fadeing and other light simulations wont work)
-#define BRIGTHNESS_DEFAULT 40	// Default setted Brightness, allowed value 0 - 45
-
+// Timer used for the led data signal
+extern TIM_HandleTypeDef htim2;
 
 // ---------------------------------------------------------------------
 // -------------- Dont´t modify lines below ----------------------------
 // ---------------------------------------------------------------------
-
 
 #define PI 3.14159265
 #define DMA_TIMEOUT 5000 //ms
