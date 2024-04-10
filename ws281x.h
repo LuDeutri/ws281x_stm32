@@ -49,7 +49,6 @@
 
 
 // Your own project specific includes
-#include "../config.h"
 
 
 // --------------- To set by user ---------------------------
@@ -63,13 +62,13 @@
 // Here defined settings are only used here and not written in the main.c
 // You have to set the same adjustments in the .ioc
 #define SYS_CLK 72000000 		// Sys clk frequence of the stm32 uC
-#define TIMER &htim2			// Used timer for the led data PWM signal
-#define TIMER_CHANNEL TIM_CHANNEL_4		// Used timer channel used for the led data PWM signal
+#define TIMER &htim1			// Used timer for the led data PWM signal
+#define TIMER_CHANNEL TIM_CHANNEL_1		// Used timer channel used for the led data PWM signal
 #define TIM_PRESCALER 0			// Prescaler settings in the .ioc
 #define TIM_ARR 90      		// (SYS_CLK / TIM_ARR) = 800 kHz
 
 // Timer used for the led data signal
-extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim1;
 
 // ---------------------------------------------------------------------
 // -------------- Dont´t modify lines below ----------------------------
