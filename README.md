@@ -17,10 +17,11 @@ To use this libary in your project you have to do following steps:
 
  * System clock: 72 MHz: Make sure that the timer clock which you are using for your PWM data signal for the leds is also 72 MHz
 
+
 ## Timer
 ![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/fec5687d-64c1-4594-ad83-b59d353235ee)
 ![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/2798c76b-db0b-433c-9ea3-c9c7a2d6b516)
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/d8573bc5-6e24-47b7-81eb-59e4dd96d94b)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/1df7f73e-41f5-45a0-9026-d9f6a2ece1bc)
 
  * TIM Prescaler: 0
  * TIM ARR: 90-1     // ARR = Sys_clk / 800000
@@ -35,7 +36,7 @@ To use this libary in your project you have to do following steps:
 ## DMA
 Should be set automtaically if you added the DMA in the timer settings before.
 
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/4700193a-8fb0-4c06-baa7-6513b2ba816a)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/b761a814-86c0-4369-88dd-293d8db43f0c)
  * Direction: Memory to Peripheral
  * Mode: Normal
  * Priority: Medium
