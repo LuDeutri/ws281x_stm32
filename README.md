@@ -7,8 +7,9 @@ To use this libary in your project you have to do following steps:
 1. Set the ioc. settings like described below
 2. Set the settings in the header file (ws281x.h)
 3. Include ws281x.h in your project to use the funtions
-4. At the end of your loop use ws281x_send() to update the leds
-5. Enjoy your led show
+4. ws281x_init() must run one time at the beginning.
+5. At the end of your loop use ws281x_send() to update the leds
+6. Enjoy your led show
 
 
 # Settings in the .ioc:
@@ -17,19 +18,24 @@ To use this libary in your project you have to do following steps:
  * System clock: 72 MHz: Make sure that the timer clock which you are using for your PWM data signal for the leds is also 72 MHz
 
 ## Timer
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/cae1c71b-bb91-4471-b707-c388221947f6)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/fec5687d-64c1-4594-ad83-b59d353235ee)
 ![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/2798c76b-db0b-433c-9ea3-c9c7a2d6b516)
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/09e2bb1d-0646-4b09-ba16-66b18cf7e17a)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/d8573bc5-6e24-47b7-81eb-59e4dd96d94b)
 
  * TIM Prescaler: 0
  * TIM ARR: 90-1     // ARR = Sys_clk / 800000
    * If you are using an other system clock frequence, you have to re calculate the ARR for the timer.
+  
+ * Every timer can be used but you must take attention to the clock frequence of the one you are using. If you are using an other timer with the same timing as here shown, you have to set the timer in the .ioc and change the defined TIMER and TIMER_CHANNEL in the header file ws281x.h. You must synchronize also the DMA channel.
+ * If you change the timing too, because the chosen timer dont work with 72 MHz or something else, you have to recalculate the ARR with the given calculation.
+ * Example:
+   * If you get 50 as result for the ARR change 90-1 into 50-1. In the header file ws281x.h change the 90 into 50 too but without the "-1". 
 
 
 ## DMA
 Should be set automtaically if you added the DMA in the timer settings before.
 
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/92ba7984-5581-4643-8146-894de376d872)
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/4700193a-8fb0-4c06-baa7-6513b2ba816a)
  * Direction: Memory to Peripheral
  * Mode: Normal
  * Priority: Medium
