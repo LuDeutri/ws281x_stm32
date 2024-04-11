@@ -49,7 +49,7 @@
  * @param firstLed index of the first LED which should be set
  * @param numberOfLeds total number of leds which should be set
  */
-void blinkOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
+void blinkOneColor(color_t color, uint16_t firstLed, uint16_t numberOfLeds);
 
 /*
  * Blink all leds in the same color. Change the color after BLINK_CHANGE_COLOR_TIME
@@ -58,7 +58,7 @@ void blinkOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
  * @param firstLed index of the first LED which should be set
  * @param numberOfLeds total number of leds which should be set
  */
-void blinkColors(color_t* color, size_t size, uint8_t firstLed, uint8_t numberOfLeds);
+void blinkColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberOfLeds);
 
 /*
  * Fade all LEDs without changing the color or sequence settings
@@ -73,7 +73,7 @@ void fadeAll();
  * @param firstLed index of the first LED which should be set
  * @param numberOfLeds total number of leds which should be set
  */
-void fadeOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
+void fadeOneColor(color_t color, uint16_t firstLed, uint16_t numberOfLeds);
 
 /*
  * Fade colors which are stored in the given color register.
@@ -83,7 +83,7 @@ void fadeOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
  * @param firstLed index of the first LED which should be set
  * @param numberOfLeds total number of leds which should be set
  */
-void fadeColors(color_t color[], size_t size, uint8_t firstLed, uint8_t numberOfLeds);
+void fadeColors(color_t color[], size_t size, uint16_t firstLed, uint16_t numberOfLeds);
 
 /*
  * Show rainbow led simulation. Colors are fixed in example.c setted and can be changed there.
@@ -95,10 +95,10 @@ void rainbow();
  * Show a running light in the LED strip. RUNNING_LIGHT_TIME defines the time one LED is lightning
  * @param color of the running light
  * @param offset at which led the running light should start
- * @param direction 1 running forward, -1 running backward
+ * @param direction 1 running forward, -1 running backward. You can use 2,3,4,... or -2,-3,-4,... that leads to 2,3,4,... leds being skipped. 0 will return in an error and stop the method
  * @return true if one cylce is done, otherwise always false
  */
-bool runningLight(color_t color, uint8_t offset, int8_t direction);
+bool runningLight(color_t color, uint16_t offset, int8_t direction);
 
 /*
  * Cyclon lieght simulation

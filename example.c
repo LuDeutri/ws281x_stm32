@@ -1,6 +1,6 @@
 #include "example.h"
 
-void blinkOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds){
+void blinkOneColor(color_t color, uint16_t firstLed, uint16_t numberOfLeds){
 
 	if(HAL_GetTick() % BLINK_PERIODEN_TIME > BLINK_PERIODEN_TIME/2)
 		setSpecificLEDs(off, firstLed, numberOfLeds);
@@ -10,7 +10,7 @@ void blinkOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds){
 
 uint32_t blinkTime = 0;
 uint8_t blinkIndex = 0;
-void blinkColors(color_t* color, size_t size, uint8_t firstLed, uint8_t numberOfLeds){
+void blinkColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberOfLeds){
 	blinkOneColor(color[blinkIndex], firstLed, numberOfLeds);
 
 	// Change the color if the leds are currently off
@@ -52,14 +52,14 @@ void fadeAll(){
 	fadeTime = HAL_GetTick();
 }
 
-void fadeOneColor(color_t color, uint8_t firstLed, uint8_t numberOfLeds) {
+void fadeOneColor(color_t color, uint16_t firstLed, uint16_t numberOfLeds) {
 	setSpecificLEDs(color, firstLed, numberOfLeds);
 	fadeAll();
 }
 
 
 uint8_t colorIndexFade = 0;
-void fadeColors(color_t* color, size_t size, uint8_t firstLed, uint8_t numberOfLeds){
+void fadeColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberOfLeds){
 	uint8_t tmpBrightness = getBrightness();
 
 	if(tmpBrightness <= 0 && !fadeIn)	// Change the color if the brightness is set to 0
@@ -80,7 +80,7 @@ void rainbow(){
 	if(numberLeds < 3)
 		return;
 
-	for(uint8_t i=0; i < numberLeds-1; i++){
+	for(uint16_t i=0; i < numberLeds-1; i++){
 		setLED(i,calculateRainbowColor(colorWheelPhase+(RAINBOW_COLOR_CHANGE_FACTOR*i)));
 		colorWheelPhase++;
 	}
@@ -89,9 +89,11 @@ void rainbow(){
 
 uint32_t runningLightTime = 0;
 int32_t runningLightCounter = 0;
-bool runningLight(color_t color, uint8_t offset, int8_t direction){
+bool runningLight(color_t color, uint16_t offset, int8_t direction){
 
 	if(offset >= numberLeds) // Validate parameter input
+		return false;
+	if(direction == 0)
 		return false;
 
 	if(HAL_GetTick() < runningLightTime + RUNNING_LIGHT_TIME) // Make the light faster/slower
@@ -116,7 +118,7 @@ void cyclon() {
   static uint8_t hue = 0;
 
 	// First slide the led in one direction
-	for(int i = 0; i < numberLeds; i++) {
+	for(uint16_t i = 0; i < numberLeds; i++) {
 		// Set the i'th led to red
 		setLED(i,hsv_to_rgb(hue++, 1, 1));
 		// Show the leds
@@ -128,7 +130,7 @@ void cyclon() {
 		HAL_Delay(10);
 	}
 	// Now go in the other direction.
-	for(int i = (numberLeds)-1; i >= 0; i--) {
+	for(int32_t i = (numberLeds)-1; i >= 0; i--) {
 		// Set the i'th led to red
 		setLED(i,hsv_to_rgb(hue++, 1, 1));
 		// Show the leds
@@ -147,12 +149,12 @@ void fire(uint8_t direction){
   static uint16_t heat[2];
 
   // Step 1.  Cool down every cell a little
-    for( uint8_t i = 0; i < numberLeds; i++) {
+    for( uint16_t i = 0; i < numberLeds; i++) {
     	heat[i] = qsub8( heat[i],  getRandom_u8(0, ((COOLING * 10) / numberLeds) + 2));
     }
 
     // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-    for( uint8_t k = numberLeds - 1; k >= 2; k--) {
+    for( int32_t k = numberLeds - 1; k >= 2; k--) {
     	heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
     }
 
@@ -163,7 +165,7 @@ void fire(uint8_t direction){
     }
 
     // Step 4.  Map from heat cells to LED colors
-    for( int j = 0; j < numberLeds; j++) {
+    for( uint16_t j = 0; j < numberLeds; j++) {
       color_t color = getColorForTemperature(heat[j]);
       uint8_t pixelNumber;
       if( !direction )
