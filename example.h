@@ -21,8 +21,8 @@
 
 //  ------- Rainbow simulation -----------
 // Number of leds which are showing the same color
-#define RAINBOW_COLOR_CHANGE_FACTOR 15 // If higher the color difference per led is higher
-#define RAINBOW_DELAY 100 // change the color again after X milliseconds
+#define RAINBOW_COLOR_CHANGE_RATE 1 // Higher value --> color difference per led is higher
+#define RAINBOW_CYCLE_TIME  500 // Higher value --> slow rainbow color change
 
 
 //  ------- Running light simulation -----------

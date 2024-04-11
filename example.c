@@ -73,18 +73,22 @@ void fadeColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberO
 uint32_t rainbowTimer = 0;
 uint8_t colorWheelPhase = 0;
 void rainbow(){
-	if(HAL_GetTick() < rainbowTimer + RAINBOW_DELAY)
-		return;
+
+	static uint32_t lastCycleTime = 0;
+	uint32_t currentTime = HAL_GetTick();
+
+	if (currentTime - lastCycleTime < RAINBOW_CYCLE_TIME / numberLeds) // Prüfen, ob es Zeit ist, die nächste LED im Regenbogen zu aktualisieren
+	        return;
 
 	// If less than 3 leds are used, stop the method because no rainbow can be shown
 	if(numberLeds < 3)
 		return;
 
-	for(uint16_t i=0; i < numberLeds-1; i++){
-		setLED(i,calculateRainbowColor(colorWheelPhase+(RAINBOW_COLOR_CHANGE_FACTOR*i)));
-		colorWheelPhase++;
-	}
-	rainbowTimer = HAL_GetTick();
+	for(uint16_t i=0; i < numberLeds; i++){
+		setLED(i,calculateRainbowColor(colorWheelPhase));
+		colorWheelPhase += RAINBOW_COLOR_CHANGE_RATE; // Änderungsrate für alle LEDs gleichmäßig anwenden
+   }
+    lastCycleTime = currentTime;
 }
 
 uint32_t runningLightTime = 0;

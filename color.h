@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <math.h>
 
+#define PI 3.14159265f
 
 typedef struct{
 	uint8_t r;
@@ -75,6 +76,6 @@ color_t getColorForTemperature(uint8_t temperature);
  * @param changeRate is the factor for the color difference per led
  * @return color_t rainbow color for one led
  */
-color_t calculateRainbowColor(uint8_t changeRate);
+color_t calculateRainbowColor(uint8_t phase);
 
 #endif

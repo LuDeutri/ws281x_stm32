@@ -114,37 +114,13 @@ color_t getColorForTemperature(uint8_t temperature) {
 color_t calculateRainbowColor(uint8_t changeRate){
 	color_t color;
 
-	uint8_t phase = changeRate / 51;
-	uint8_t level = changeRate % 51;
+	// Calculation of the phase angle based on the rate of change
+	float phaseAngle = changeRate / 51.0 * PI;
 
-	switch( phase ){
-	     case 0:
-	       color.r   = 255;
-	       color.g = level * 5;
-	       color.b  = 0;
-	       break;
-	     case 1:
-	       color.r   = 255 - level * 5;
-	       color.g = 255;
-	       color.b  = 0;
-	       break;
-	     case 2:
-	       color.r   = 0;
-	       color.g = 255;
-	       color.b  = level * 5;
-	       break;
-	     case 3:
-	       color.r   = 0;
-	       color.g = 255 - level * 5;
-	       color.b  = 255;
-	       break;
-	     case 4:
-	       color.r   = level * 5;
-	       color.g = 0;
-	       color.b  = 255;
-	       break;
-	     default:
-	       color.r = color.g = color.b = 255;
-	   }
+	// Calculate color with sinus function
+	color.r = (uint8_t)(127.5 * (1 + sin(phaseAngle))); 			// red
+	color.g = (uint8_t)(127.5 * (1 + sin(phaseAngle + 2 * PI / 3))); // green
+	color.b = (uint8_t)(127.5 * (1 + sin(phaseAngle + 4 * PI / 3))); // blue
+
 	return color;
 }
