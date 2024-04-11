@@ -49,15 +49,11 @@
 #include "example.h"
 #include "color.h"
 
-
-// Your own project specific includes
-
-
 // --------------- To set by user ---------------------------
 
 #define USE_WS2811 1	// WS2811: 1 , WS2812: 0 // WS2812 untested!
 
-// To seperate the information for the diffrent leds there must be a reset cycle about a given time. In this time the pwm signal must be low.
+// If information for all led are sent, a reset period is required to start the next sequence about all leds. In this time the pwm signal must be low.
 // First way: Set the last bit in the array to 0 and use an HAL delay. This way saves RAM.
 // Second Way: Set enough bits to 0 at the end of the array and send them. This needs more RAM but you dont have an delay in your loop.
 #define USE_RAM_FOR_RESET 1
