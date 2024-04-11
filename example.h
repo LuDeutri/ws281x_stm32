@@ -26,20 +26,14 @@
 
 
 //  ------- Running light simulation -----------
-// Time one led is lighting
-#define RUNNING_LIGHT_TIME 100
+#define RUNNING_LIGHT_TIME 100 // Time one led is lighting, lower value makes the light faster
 
 
-//  ------- Fire light simulation -----------
-// COOLING: How much does the air cool as it rises?
-// Less cooling = taller flames.  More cooling = shorter flames.
-// Default 50, suggested range 20-100
-#define COOLING  50
+//  ------- Cyclone light simulation -----------
+#define CYCLONE_RUN_DELAY 30 // Speed of the cyclone. Higher value --> faster cyclone
+#define CYCLONE_DIFFERENCE_PER_LED 0.5f // 0.05f ... 100 // Higher value increase the color difference per LED
+#define CYCLONE_COLOR_JUMP //1 ... 10 // Higher value increase the color jump with the cyclone run
 
-// SPARKING: What chance (out of 255) is there that a new spark will be lit?
-// Higher chance = more roaring fire.  Lower chance = more flickery fire.
-// Default 120, suggested range 50-200.
-#define SPARKING 120
 
 
 
@@ -95,22 +89,22 @@ void rainbow();
  * Show a running light in the LED strip. RUNNING_LIGHT_TIME defines the time one LED is lightning
  * @param color of the running light
  * @param offset at which led the running light should start
- * @param direction 1 running forward, -1 running backward. You can use 2,3,4,... or -2,-3,-4,... that leads to 2,3,4,... leds being skipped. 0 will return in an error and stop the method
- * @return true if one cylce is done, otherwise always false
+ * @param direction 1 running forward, -1 running backward. You can use 2,3,4,... or -2,-3,-4,... that leads to 2,3,4,... leds being skipped.
+ * 			0 will return in an error and stop the method
+ * @param resetLeds if true all leds are set off in the method. If you want to use multiple
+ * 			parallel running lights you must set it false and reset the leds before executing the methods for the running lights.
+ * @return true if one cycle is done, otherwise always false
  */
-bool runningLight(color_t color, uint16_t offset, int8_t direction);
+bool runningLight(color_t color, uint16_t offset, int8_t direction, bool resetLeds);
 
 /*
- * Cyclon lieght simulation
+ * Cyclone light simulation is a running color change from the right to the left, back to the right,
+ * again to the left and so on. You can modify the color difference per led, the color difference
+ * after the cyclone run and the speed of the cyclone with changing the defined values.
+ *
+ * Attention! This method uses HAL_Delay() and will cause a delay of the main loop!
  */
-void cyclon();
-
-/*
- * Fire light simulation. The colors are defined in a 16-value-palette which is defined in color.h
- * @param direction defines the base and the direction of the flame 0: LED0 = base, 1: LED_NUM-1 = base,
- */
-void fire(uint8_t direction);
-
+void cyclone();
 
 
 #endif

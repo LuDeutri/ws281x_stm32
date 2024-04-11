@@ -57,7 +57,6 @@ void fadeOneColor(color_t color, uint16_t firstLed, uint16_t numberOfLeds) {
 	fadeAll();
 }
 
-
 uint8_t colorIndexFade = 0;
 void fadeColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberOfLeds){
 	uint8_t tmpBrightness = getBrightness();
@@ -92,7 +91,7 @@ void rainbow(){
 
 uint32_t runningLightTime = 0;
 int32_t runningLightCounter = 0;
-bool runningLight(color_t color, uint16_t offset, int8_t direction){
+bool runningLight(color_t color, uint16_t offset, int8_t direction, bool resetLeds){
 
 	if(offset >= numberLeds) // Validate parameter input
 		return false;
@@ -110,72 +109,43 @@ bool runningLight(color_t color, uint16_t offset, int8_t direction){
 		return true;
 	}
 
-	setAllLEDs(off); // Reset all led data
+	if(resetLeds) setAllLEDs(off); // Reset all led data
+
 	setLED(offset + (runningLightCounter*direction), color); // Set the lightning led
 	runningLightCounter++;
 
 	return false;
 }
 
-void cyclon() {
-  static uint8_t hue = 0;
+void cyclone() {
+    static uint8_t hue = 0;
 
-	// First slide the led in one direction
-	for(uint16_t i = 0; i < numberLeds; i++) {
-		// Set the i'th led to red
-		setLED(i,hsv_to_rgb(hue++, 1, 1));
-		// Show the leds
-		ws281x_send();
-		// now that we've shown the leds, reset the i'th led to black
-		setLED(i,off);
-		fadeAll();
-		// Wait a little bit before we loop around and do it again
-		HAL_Delay(10);
-	}
-	// Now go in the other direction.
-	for(int32_t i = (numberLeds)-1; i >= 0; i--) {
-		// Set the i'th led to red
-		setLED(i,hsv_to_rgb(hue++, 1, 1));
-		// Show the leds
-		ws281x_send();
-		// now that we've shown the leds, reset the i'th led to black
-		setLED(i,off);
-		fadeAll();
-		// Wait a little bit before we loop around and do it again
-		HAL_Delay(10);
-	}
-}
+    // First slide the led in one direction
+    for (uint16_t i = 0; i < numberLeds; i++) {
+        // Set the i'th led to red
+    	setLED(i, hsv_to_rgb(hue+=6, 1, 1));
+        // Show the leds
+        ws281x_send();
 
-
-void fire(uint8_t direction){
-// Array of temperature readings at each simulation cell
-  static uint16_t heat[2];
-
-  // Step 1.  Cool down every cell a little
-    for( uint16_t i = 0; i < numberLeds; i++) {
-    	heat[i] = qsub8( heat[i],  getRandom_u8(0, ((COOLING * 10) / numberLeds) + 2));
+        // Fade out the color
+        for (float ratio = 1.0; ratio >= 0.0; ratio -= CYCLONE_DIFFERENCE_PER_LED) {
+            fadeToColor(hsv_to_rgb(hue, 1, 1), off, ratio);
+            ws281x_send();
+            HAL_Delay(CYCLONE_RUN_DELAY); // Adjust delay time as needed
+        }
     }
+    // Now go in the other direction.
+    for (int32_t i = (numberLeds)-1; i >= 0; i--) {
+        // Set the i'th led to red
+    	setLED(i, hsv_to_rgb(hue+=6, 1, 1));
+        // Show the leds
+        ws281x_send();
 
-    // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-    for( int32_t k = numberLeds - 1; k >= 2; k--) {
-    	heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
-    }
-
-    // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
-    if( getRandom_u8(0,255) < SPARKING ) {
-    	uint8_t y = getRandom_u8(0,7);
-    	heat[y] = qadd8( heat[y], getRandom_u8(160,255) );
-    }
-
-    // Step 4.  Map from heat cells to LED colors
-    for( uint16_t j = 0; j < numberLeds; j++) {
-      color_t color = getColorForTemperature(heat[j]);
-      uint8_t pixelNumber;
-      if( !direction )
-    	  pixelNumber = (numberLeds-1) - j;
-      else
-    	  pixelNumber = j;
-
-      setLED(pixelNumber,color);
+        // Fade out the color
+        for (float ratio = 1.0; ratio >= 0.0; ratio -= CYCLONE_DIFFERENCE_PER_LED) {
+            fadeToColor(hsv_to_rgb(hue, 1, 1), off, ratio);
+            ws281x_send();
+            HAL_Delay(CYCLONE_RUN_DELAY); // Adjust delay time as needed
+        }
     }
 }
