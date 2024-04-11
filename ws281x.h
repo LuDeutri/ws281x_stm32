@@ -85,7 +85,6 @@ extern TIM_HandleTypeDef htim1;
 // -------------- Dont´t modify lines below ----------------------------
 // ---------------------------------------------------------------------
 
-#define PI 3.14159265f
 #define DMA_TIMEOUT 5000 //ms
 extern uint16_t numberLeds;
 
@@ -115,6 +114,7 @@ void setLED(uint16_t LEDnum, color_t color);
 /*
  * Set the RGB data for the given leds.
  * Starting with the 'firstLed' index all follow leds will be set until 'numberOfLeds' are lightning.
+ * All other leds stay with the same settings like before.
  * @param color color_t element which store the RGB data of the color
  * @param firstLed index of the first LED which should be set
  * @param numberOfLeds total number of leds which should be set
