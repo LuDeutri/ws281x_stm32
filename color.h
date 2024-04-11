@@ -76,6 +76,6 @@ color_t getColorForTemperature(uint8_t temperature);
  * @param changeRate is the factor for the color difference per led
  * @return color_t rainbow color for one led
  */
-color_t calculateRainbowColor(uint8_t phase);
+color_t calculateRainbowColor(uint16_t phase);
 
 #endif

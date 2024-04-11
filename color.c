@@ -111,7 +111,7 @@ color_t getColorForTemperature(uint8_t temperature) {
 }
 
 
-color_t calculateRainbowColor(uint8_t changeRate){
+color_t calculateRainbowColor(uint16_t changeRate){
 	color_t color;
 
 	// Calculation of the phase angle based on the rate of change
