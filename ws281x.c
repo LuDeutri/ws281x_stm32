@@ -1,15 +1,12 @@
 #include "ws281x.h"
 
-//---------------------------------------------------------------
-//----Dont`t change things below --------------------------------
-//---------------------------------------------------------------
 
+uint16_t numberLeds = 0; 	// set in ws281x_init()
+uint8_t brightness = 0; 	// set do default in init()
+bool dataSentFlag; 			// True if DMA action is finished and the next one can start
 
-uint16_t numberLeds = 0; // set in ws281x_init()
-uint8_t brightness = 0; // set do default in init()
-bool dataSentFlag; // True if DMA action is finished and the next one can start
-
-// To seperate the information for the diffrent leds there must be a reset cycle about a given time. In this time the pwm signal must be low.
+// To separate the information for the different leds there must be a reset cycle about a given time.
+// In this time the pwm signal must be low.
 // First way: Set the last bit in the array to 0 and use an HAL delay. This way saves RAM.
 // Second Way: Set enough bits to 0 at the end of the array and send them. This needs more RAM but you dont have an delay in your loop.
 #if USE_RAM_FOR_RESET
@@ -36,7 +33,7 @@ void ws281x_init(void) {
 	// Set number of controller of the leds depending if WS2811 or WS2812 is used
 	numberLeds = translateNumLeds_WS2811_WS2812(NUM_LED);
 
-	// Set Brightness initial value
+	// Set brightness initial value
 	if(ENABLE_BRIGHTNESS)
 		setBrightness(BRIGTHNESS_DEFAULT);
 
@@ -49,7 +46,7 @@ void ws281x_send (void){
 	uint32_t color;
 
 	if(ENABLE_BRIGHTNESS)
-		calculateLedDataWithBrightness(); // Manipulate ledData with brightness factor
+		calculateLedDataWithBrightness(); // Manipulate led data with brightness factor
 
 	for (uint16_t i= 0; i<numberLeds; i++){
 
@@ -71,10 +68,10 @@ void ws281x_send (void){
 		}
 	}
 	// Reset period
-	// If no delay is wihsed (USE_RAM_FOR_RESET) RESET_PERIOD elements are saved with 0 at the end of the array
+	// If no delay is wished (USE_RAM_FOR_RESET) RESET_PERIOD elements are saved with 0 at the end of the array
 	// If the reset can work with an delay only one last element with 0 is added
 	while(indx < (sizeof(pwmData)/sizeof(pwmData[0]))){
-		pwmData[indx] = 0; // Reset period
+		pwmData[indx] = 0;
 		indx++;
 	}
 
@@ -85,7 +82,8 @@ void ws281x_send (void){
 	uint32_t dmaTime = 0;
 	while (!dataSentFlag){
 		if(dmaTime == 0) dmaTime = HAL_GetTick();
-		// Break condition if DMA dont answer stop it
+		// Break condition if DMA dont work, stop it
+		// If you are here, you probably made something wrong
 		if(HAL_GetTick() > dmaTime + DMA_TIMEOUT) return;
 	}
 	dataSentFlag = 0; // Reset DMA interrupt flag
@@ -102,7 +100,7 @@ void setLED(uint16_t LEDnum, color_t color){
 	if(color.g % 2 != 0) color.g--;
 	if(color.b % 2 != 0) color.b--;
 
-	// Set LED RGB data for binary data transition
+	// Set led RGB data for binary data transition
 	ledData[LEDnum][0] = color.b;
 	ledData[LEDnum][1] = color.r;
 	ledData[LEDnum][2] = color.g;
@@ -149,9 +147,6 @@ void calculateLedDataWithBrightness(){
         ledMod[i][2] = (uint8_t)factor;
     }
 }
-
-
-
 
 void setBrightness(uint8_t br){
 	if(!ENABLE_BRIGHTNESS)

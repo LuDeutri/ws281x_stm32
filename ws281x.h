@@ -1,7 +1,7 @@
 /*
  * This class handles WS281x led´s based on a stm32 processor with using PWM and DMA.
  *
- * Based on the work of:
+ * Based on the work of Controllerstech.com
  * Here you can find a detailed description how the control of the ws281x leds work:
  * https://controllerstech.com/interface-ws2812-with-stm32/
  *
@@ -53,9 +53,12 @@
 
 #define USE_WS2811 1	// WS2811: 1 , WS2812: 0 // WS2812 untested!
 
-// If information for all led are sent, a reset period is required to start the next sequence about all leds. In this time the pwm signal must be low.
-// First way: Set the last bit in the array to 0 and use an HAL delay. This way saves RAM.
-// Second Way: Set enough bits to 0 at the end of the array and send them. This needs more RAM but you dont have an delay in your loop.
+/* If information for all led are sent, a reset period is required to start the next sequence
+ * about all leds. In this time the pwm signal must be low.
+ * First way: Set the last bit in the array to 0 and use an HAL delay. This way saves RAM.
+ * Second Way: Set enough bits to 0 at the end of the array and send them. This needs more
+ * RAM but you dont have an delay in your loop.
+ */
 #define USE_RAM_FOR_RESET 1
 
 // Can be reduced with running time analyze of your system
@@ -65,22 +68,26 @@
 #define ENABLE_BRIGHTNESS 1		// 1: enables brightness control of the leds, if deactivated it is always 100% (fading and other light simulations wont work)
 #define BRIGTHNESS_DEFAULT 40	// Default setted brightness, allowed value 0 - 45
 
-// Here defined settings are only used here and not written in the main.c
-// You have to set the same adjustments in the .ioc
+
+/* -------------------------------------
+ * Here defined settings are only used here and not written in the main.c
+ * You have to set the same adjustments in the .ioc
+ *///-----------------------------------
 #define SYS_CLK 72000000 		// Sys clk frequence of the stm32 uC
 #define TIMER &htim1			// Used timer for the led data PWM signal
 #define TIMER_CHANNEL TIM_CHANNEL_1		// Used timer channel used for the led data PWM signal
 #define TIM_PRESCALER 0			// Prescaler settings in the .ioc
 #define TIM_ARR 90      		// (SYS_CLK / TIM_ARR) = 800 kHz (400kHz are possible too, read the documentation for the ws281x leds)
 
-// Timer used for the led data signal
-extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim1; // Timer used for the led data signal
+
+
 
 // ---------------------------------------------------------------------
 // -------------- Dont´t modify lines below ----------------------------
 // ---------------------------------------------------------------------
 
-#define DMA_TIMEOUT 5000 //ms
+#define DMA_TIMEOUT 5000 // ms
 extern uint16_t numberLeds;
 
 
@@ -89,7 +96,7 @@ void ws281x_init();
 
 /*
  * Translate RGB data into PWM duty cycle and start the DMA.
- * SetLED() / setAllLEDs() should be called first.
+ * This method updates the leds with the stored led data.
  */
 void ws281x_send();
 
@@ -140,7 +147,6 @@ uint8_t getBrightness();
  * If Brightness is defines as enabled, this method is called in ws281x_send().
  */
 void calculateLedDataWithBrightness();
-
 
 /*
  * Calculate and return the number of controller for the given number of leds
