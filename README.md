@@ -59,13 +59,20 @@ Should be set automtaically if you added the DMA in the timer settings before.
  * Memory Increment Address: checked
  * Memory Data Width: Byte
 
-# Settings in the ws281x.h:
-![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/6134a18b-bc01-4437-a57a-15a76f3b8b19)
-* Sychronize the uC HAL with your used uC. Here it is used the STM32F1
-* Sychronize the project include paths if your are using constants. If not let this part empty.
-* WS2811
+# Settings in ws281x.h:
+![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/78158cad-6d04-40f0-8b74-0a620673ef21)
+* 1: Sychronize the uC HAL with your used uC. Here it is used the STM32F1
+  
+2: * WS2811
   * 0: WS2812 Leds
   * 1: WS2811 Leds
+* USE_RAM_FOR_RESET
+  * If information for all led are sent, a reset period is required to start the next sequence about all leds.
+  * 1: A defined number (RESET_PERIOD) of 0 values are added to the pwm data array at the end. This needs RAM. Default value is 50.
+  * 0: Only one 0 is added to the pwm data array at the end, but a delay about 1ms is added. No extra RAM is needed but you have an short delay in your loop.
+* RESET_PERIOD
+  * Number of 0 for the reset if ram is used (USE_RAM_FOR_RESET = 1) Otherwise not used
+  * 50 is the default value, can be reduced with runtime analyzing. A rest period about 50µs is required.
 * NUM_LED
   * Total number of leds
 * ENABLE_BRIGTHNESS
@@ -75,3 +82,5 @@ Should be set automtaically if you added the DMA in the timer settings before.
   * 0: min
   * 45: max 
 Synchronize the defined variables with the .ioc settings
+
+If you set the defined values above to other values as here described, like WS2811 = 3, everything can happen :) 
