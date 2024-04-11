@@ -70,7 +70,6 @@ void fadeColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberO
 	fadeOneColor(color[colorIndexFade], firstLed, numberOfLeds); // Fade one color
 }
 
-uint32_t rainbowTimer = 0;
 uint8_t colorWheelPhase = 0;
 void rainbow(){
 
