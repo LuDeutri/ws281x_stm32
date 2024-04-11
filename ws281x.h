@@ -47,7 +47,6 @@
 
 // ws281x specific functions
 #include "example.h"
-#include "utility.h"
 #include "color.h"
 
 
