@@ -1,6 +1,9 @@
 /*
  * This class handles WS281x led´s based on a stm32 processor with using PWM and DMA.
- * Based on the work of https://controllerstech.com/interface-ws2812-with-stm32/
+ *
+ * Based on the work of:
+ * Here you can find a detailed description how the control of the ws281x leds work:
+ * https://controllerstech.com/interface-ws2812-with-stm32/
  *
  * It is important to set the clock configuration in the .ioc, otherwise
  * it will not work.
@@ -55,7 +58,15 @@
 
 #define USE_WS2811 1	// WS2811: 1 , WS2812: 0 // WS2812 untested!
 
-#define NUM_LED 6				// Total number of leds, doesn't matter if WS2812 or WS2811
+// To seperate the information for the diffrent leds there must be a reset cycle about a given time. In this time the pwm signal must be low.
+// First way: Set the last bit in the array to 0 and use an HAL delay. This way saves RAM.
+// Second Way: Set enough bits to 0 at the end of the array and send them. This needs more RAM but you dont have an delay in your loop.
+#define USE_RAM_FOR_RESET 1
+
+// Can be reduced with running time analyze of your system
+#define RESET_PERIOD 50 // reset_period, 1.25µs * RESET_PERIOD, You need at least 50µs @800kHz (datasheet)
+
+#define NUM_LED 15				// Total number of leds, doesn't matter if WS2812 or WS2811
 #define ENABLE_BRIGHTNESS 1		// 1: enables brightness control of the leds, if deactivated it is always 100% (fading and other light simulations wont work)
 #define BRIGTHNESS_DEFAULT 40	// Default setted brightness, allowed value 0 - 45
 
@@ -65,7 +76,7 @@
 #define TIMER &htim1			// Used timer for the led data PWM signal
 #define TIMER_CHANNEL TIM_CHANNEL_1		// Used timer channel used for the led data PWM signal
 #define TIM_PRESCALER 0			// Prescaler settings in the .ioc
-#define TIM_ARR 90      		// (SYS_CLK / TIM_ARR) = 800 kHz
+#define TIM_ARR 90      		// (SYS_CLK / TIM_ARR) = 800 kHz (400kHz are possible too, read the documentation for the ws281x leds)
 
 // Timer used for the led data signal
 extern TIM_HandleTypeDef htim1;
@@ -74,9 +85,9 @@ extern TIM_HandleTypeDef htim1;
 // -------------- Dont´t modify lines below ----------------------------
 // ---------------------------------------------------------------------
 
-#define PI 3.14159265
+#define PI 3.14159265f
 #define DMA_TIMEOUT 5000 //ms
-extern uint8_t numberLeds;
+extern uint16_t numberLeds;
 
 
 
@@ -99,7 +110,7 @@ void ws281x_settOff();
  * @param LEDnum number of the led which color is to set
  * @param color color_t element which store the RGB data of the color
  */
-void setLED(uint8_t LEDnum, color_t color);
+void setLED(uint16_t LEDnum, color_t color);
 
 /*
  * Set the RGB data for the given leds.
@@ -108,7 +119,7 @@ void setLED(uint8_t LEDnum, color_t color);
  * @param firstLed index of the first LED which should be set
  * @param numberOfLeds total number of leds which should be set
  */
-void setSpecificLEDs(color_t color, uint8_t firstLed, uint8_t numberOfLeds);
+void setSpecificLEDs(color_t color, uint16_t firstLed, uint16_t numberOfLeds);
 
 /*
  * Set all LEDs which are controlled by this mcu
@@ -136,21 +147,15 @@ uint8_t getBrightness();
 void calculateLedDataWithBrightness();
 
 
-#define IDX_STARTING_LED 1
-#define IDX_NUM_LIGHTNING_LEDS 0
 /*
  * Calculate and return the number of controller for the given number of leds
- * If WS2812 is used, the same number is returned.
- * If WS2811 is used, the number is divided by 3. If the given number can not be divided by 3 without a rest,
- * the number will be incresed (idx=false) / decreased (idx=true) until its possible
- * @param numLed 0-255
- * @param idx set true (IDX_STARTING_LED) if the given number is the index of the starting led. Set false (IDX_NUM_LIGHTNING_LEDS) if its the number of Leds which sould lighting.
+ * @param number of leds
  * @return number of controller of the leds
  */
-uint8_t translateNumLeds_WS2811_WS2812(uint8_t numLed, bool idx);
+uint16_t translateNumLeds_WS2811_WS2812(uint16_t numLed);
 
 /*
- * HAL function overwrite to detect the end of the DMA conversation.
+ * HAL function overwrite to detect the end of the DMA conversation and set an boolean flag (dataSentFlag) true.
  */
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim);
 
