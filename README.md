@@ -2,8 +2,19 @@
 (WS2812 is not tested)
 This Libary gives simple basic functions to control an ws2811/12 led strip with a stm32 processor.
 It is based on an Timer with PWM Output and a DMA.
-To use this libary in your project you have to do following steps:
 
+### Needed RAM:
+approx. 234 Bits/Led
++ 5 KB RAM: 170 Leds (ws2811: 510 Leds)
++ 10 KB RAM: 341 Leds (ws2811: 1,023 Leds)
++ 20 KB RAM: 683 Leds (ws2811: 2,049 Leds)
++ 50 KB RAM: 1,709 Leds (ws2811: 5,127 Leds)
+
+WS2811 use one controller for 3 Leds. Thats the reason why you can use 3x more leds.
+In ws281x.h NUM_LED must be the total number of the leds. It doesnt matter if ws2811 or 12 is used. The right number ob controller is calculated in ws281x_init().
+
+
+## To use this libary in your project you have to do following steps:
 1. Set the ioc. settings like described below
 2. Set the settings in the header file (ws281x.h)
 3. Include ws281x.h in your project to use the funtions
@@ -13,9 +24,12 @@ To use this libary in your project you have to do following steps:
 
 
 # Settings in the .ioc:
+## System clock
 ![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/ec8e1c6e-852f-4a23-b266-676ce76d7a26)
 
- * System clock: 72 MHz: Make sure that the timer clock which you are using for your PWM data signal for the leds is also 72 MHz
+ * 72 MHz: Make sure that the timer clock which you are using for your PWM data signal for the leds is also 72 MHz
+
+You can use an other clock frequence but than you have to adjust the timer settings and the settings in ws281x.h like shown below.
 
 
 ## Timer
