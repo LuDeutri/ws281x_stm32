@@ -61,9 +61,9 @@ Should be set automtaically if you added the DMA in the timer settings before.
 
 # Settings in ws281x.h:
 ![grafik](https://github.com/LuDeutri/ws281x_stm32/assets/56504337/78158cad-6d04-40f0-8b74-0a620673ef21)
-* 1: Sychronize the uC HAL with your used uC. Here it is used the STM32F1
+* Sychronize the uC HAL with your used uC. Here it is used the STM32F1
   
-2: * WS2811
+* WS2811
   * 0: WS2812 Leds
   * 1: WS2811 Leds
 * USE_RAM_FOR_RESET
@@ -81,6 +81,7 @@ Should be set automtaically if you added the DMA in the timer settings before.
 * BRIGHTNESS_DEFAULT
   * 0: min
   * 45: max 
-Synchronize the defined variables with the .ioc settings
+
+Synchronize the defined variables ( SYS_CLK, TIMER, ...) with the .ioc settings
 
 If you set the defined values above to other values as here described, like WS2811 = 3, everything can happen :) 
