@@ -19,33 +19,7 @@ size_t colorFadeRegSize = sizeof(colorFadeReg)/sizeof(colorFadeReg[0]);
 
 color_t colorBlinkReg[] = { blue, green, red };
 size_t colorBlinkRegSize = sizeof(colorBlinkReg)/sizeof(colorBlinkReg[0]);
-
-color_t colorRainbowReg[] = { red, orange, yellow, green, blue, indigo, violett };
-size_t colorRainbowRegSize = sizeof(colorRainbowReg)/sizeof(colorRainbowReg[0]);
 // -------------------------------------------------------
-
-// --------------- Color for fire simulation --------------
-DEFINE_GRADIENT_PALETTE(FlameColorsPalette,
-    {0,   {0,   0,   0}},    // Dunkelblau
-    {16,  {0,   0,  64}},    // Blau
-    {32,  {0,   0, 128}},    // Dunkelblau
-    {48,  {0,   0, 192}},    // Blau
-    {64,  {0,   0, 255}},    // Blau
-    {80,  {0,  64, 255}},    // Hellblau
-    {96,  {0, 128, 255}},    // Hellblau
-    {112, {0, 192, 255}},    // Hellblau
-    {128, {0, 255, 255}},    // Türkis
-    {144, {64, 255, 255}},   // Helltürkis
-    {160, {128,255, 255}},   // Helltürkis
-    {176, {192,255, 255}},   // Helltürkis
-    {192, {255,255, 255}},   // Weiß
-    {208, {255,224, 192}},   // Heller Rotton
-    {224, {255,160, 128}},   // Rotton
-    {240, {255, 96,  64}},   // Dunkler Rotton
-    {255, {255,  0,   0}}    // Rot
-);
-// --------------- /Color for fire simulation --------------
-
 
 color_t hsv_to_rgb(float hue, float saturation, float value) {
     color_t rgb;
@@ -84,33 +58,6 @@ color_t hsv_to_rgb(float hue, float saturation, float value) {
     return rgb;
 }
 
-
-color_t getColorForTemperature(uint8_t temperature) {
-	// Iterate through the palette entries to find the appropriate color
-    for (int i = 0; i < FlameColorsPalette.numEntries - 1; ++i) {
-        if (temperature >= FlameColorsPalette.entries[i].position &&
-            temperature < FlameColorsPalette.entries[i + 1].position) {
-
-        	// Interpolate between the two colors based on temperature position
-            uint8_t range = FlameColorsPalette.entries[i + 1].position - FlameColorsPalette.entries[i].position;
-            uint8_t positionInRange = temperature - FlameColorsPalette.entries[i].position;
-            color_t color1 = FlameColorsPalette.entries[i].color;
-            color_t color2 = FlameColorsPalette.entries[i + 1].color;
-
-            color_t resultColor;
-            resultColor.r = color1.r + (positionInRange * (color2.r - color1.r)) / range;
-            resultColor.g = color1.g + (positionInRange * (color2.g - color1.g)) / range;
-            resultColor.b = color1.b + (positionInRange * (color2.b - color1.b)) / range;
-
-            return resultColor;
-        }
-    }
-
-    // Default: Return the color at the last position
-    return FlameColorsPalette.entries[FlameColorsPalette.numEntries - 1].color;
-}
-
-
 color_t calculateRainbowColor(uint16_t changeRate){
 	color_t color;
 
@@ -123,4 +70,14 @@ color_t calculateRainbowColor(uint16_t changeRate){
 	color.b = (uint8_t)(127.5 * (1 + sin(phaseAngle + 4 * PI / 3))); // blue
 
 	return color;
+}
+
+color_t fadeToColor(color_t actualColor, color_t targetColor, float ratio) {
+
+    // Interpolate between colors
+    uint8_t r = actualColor.r + (uint8_t)((targetColor.r - actualColor.r) * ratio);
+    uint8_t g = actualColor.g + (uint8_t)((targetColor.g - actualColor.g) * ratio);
+    uint8_t b = actualColor.b + (uint8_t)((targetColor.b - actualColor.b) * ratio);
+
+    return (color_t){r,g,b};
 }

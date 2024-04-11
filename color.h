@@ -1,8 +1,5 @@
 /*
- * color.h
- *
- *  Created on: Dec 1, 2023
- *      Author: lucad
+ * Contains information and methods for the color of the leds
  */
 
 #ifndef WS281X_STM32_COLOR_H_
@@ -31,21 +28,6 @@ extern const color_t indigo;
 extern const color_t violett;
 extern const color_t white;
 
-// -------- Fire simulation --------------------
-#define DEFINE_GRADIENT_PALETTE(name, ...) \
-    const gradientPalette_t name = { sizeof((paletteEntry_t[]){__VA_ARGS__}) / sizeof(paletteEntry_t), {__VA_ARGS__} }
-
-typedef struct{
-	uint8_t position;
-	color_t color;
-} paletteEntry_t;
-
-typedef struct{
-	uint8_t numEntries;
-	paletteEntry_t entries[];
-} gradientPalette_t;
-// -------- /Fire simulation --------------------
-
 extern color_t colorFadeReg[];
 extern size_t colorFadeRegSize;
 
@@ -62,20 +44,19 @@ extern size_t colorBlinkRegSize;
 color_t hsv_to_rgb(float hue, float saturation, float brightness);
 
 /*
- * Translate temperature value in color value for fire light simulation with 16-value-palette.
- * Temperature values between 2 safed elements in the palett result in a mixed colour return of the two nearest
- * palett values
- * This method is based on HeatColor() of FastLED.
- * @param temperature value 0-255
- * @return color_t elemt based on given temperature
- */
-color_t getColorForTemperature(uint8_t temperature);
-
-/*
  * Calculate rainbow colors.
  * @param changeRate is the factor for the color difference per led
  * @return color_t rainbow color for one led
  */
 color_t calculateRainbowColor(uint16_t phase);
+
+/*
+ * Fade from one color to the other in a given ratio. An interpolate function is used.
+ * @param actualColor
+ * @param targetColor
+ * @param ratio
+ * @return color mix from the given colors with the given ratio
+ */
+color_t fadeToColor(color_t actualColor, color_t targetColor, float ratio);
 
 #endif
