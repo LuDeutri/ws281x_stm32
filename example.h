@@ -32,7 +32,7 @@
 //  ------- Cyclone light simulation -----------
 #define CYCLONE_RUN_DELAY 30 // Speed of the cyclone. Higher value --> faster cyclone
 #define CYCLONE_DIFFERENCE_PER_LED 0.5f // 0.05f ... 100 // Higher value increase the color difference per LED
-#define CYCLONE_COLOR_JUMP //1 ... 10 // Higher value increase the color jump with the cyclone run
+#define CYCLONE_COLOR_JUMP 6 //1 ... 10 // Higher value increase the color jump with the cyclone run
 
 
 
