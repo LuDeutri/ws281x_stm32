@@ -123,7 +123,7 @@ void cyclone() {
     // First slide the led in one direction
     for (uint16_t i = 0; i < numberLeds; i++) {
         // Set the i'th led to red
-    	setLED(i, hsv_to_rgb(hue+=6, 1, 1));
+    	setLED(i, hsv_to_rgb(hue += CYCLONE_COLOR_JUMP, 1, 1));
         // Show the leds
         ws281x_send();
 
@@ -137,7 +137,7 @@ void cyclone() {
     // Now go in the other direction.
     for (int32_t i = (numberLeds)-1; i >= 0; i--) {
         // Set the i'th led to red
-    	setLED(i, hsv_to_rgb(hue+=6, 1, 1));
+    	setLED(i, hsv_to_rgb(hue += CYCLONE_COLOR_JUMP, 1, 1));
         // Show the leds
         ws281x_send();
 
