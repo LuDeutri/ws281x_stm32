@@ -13,12 +13,16 @@ const color_t violett = {136, 0, 255};
 const color_t white = {255, 255, 255};
 
 
-// ---------Variables for example.h methods --------------
-color_t colorFadeReg[] = { violett, blue, green, yellow, orange, red };
+// --------- Arrays used for diffrent color light simulations --------------
+// The colors can be changed as desired
+color_t colorFadeReg[] = { violett, blue, green, yellow, orange, red};
 size_t colorFadeRegSize = sizeof(colorFadeReg)/sizeof(colorFadeReg[0]);
 
 color_t colorBlinkReg[] = { blue, green, red };
 size_t colorBlinkRegSize = sizeof(colorBlinkReg)/sizeof(colorBlinkReg[0]);
+
+color_t colorRainbowReg[] = { violett, blue, indigo, green, yellow, orange, red, romanticRed};
+size_t colorRainbowRegSize = sizeof(colorRainbowReg)/sizeof(colorRainbowReg[0]);
 // -------------------------------------------------------
 
 color_t hsv_to_rgb(float hue, float saturation, float value) {
@@ -58,7 +62,7 @@ color_t hsv_to_rgb(float hue, float saturation, float value) {
     return rgb;
 }
 
-color_t calculateRainbowColor(float changeRate){
+color_t calculateColorWheelColor(float changeRate){
 	color_t color;
 
 	// Calculation of the phase angle based on the rate of change
@@ -66,7 +70,7 @@ color_t calculateRainbowColor(float changeRate){
 
 	// Calculate color with sinus function
 	color.r = (uint8_t)(127.5 * (1 + sin(phaseAngle))); 			// red
-	color.g = (uint8_t)(127.5 * (1 + sin(phaseAngle - PI / 3))); // green
+	color.g = (uint8_t)(127.5 * (1 + sin(phaseAngle - PI / 3))); 	// green
 	color.b = (uint8_t)(127.5 * (1 + sin(phaseAngle - 2*PI / 3))); // blue
 
 	return color;
@@ -75,9 +79,9 @@ color_t calculateRainbowColor(float changeRate){
 color_t fadeToColor(color_t actualColor, color_t targetColor, float ratio) {
 
     // Interpolate between colors
-    uint8_t r = actualColor.r + (uint8_t)((targetColor.r - actualColor.r) * ratio);
-    uint8_t g = actualColor.g + (uint8_t)((targetColor.g - actualColor.g) * ratio);
-    uint8_t b = actualColor.b + (uint8_t)((targetColor.b - actualColor.b) * ratio);
+    uint8_t r = actualColor.r + (int16_t)((targetColor.r - actualColor.r) * ratio);
+    uint8_t g = actualColor.g + (int16_t)((targetColor.g - actualColor.g) * ratio);
+    uint8_t b = actualColor.b + (int16_t)((targetColor.b - actualColor.b) * ratio);
 
     return (color_t){r,g,b};
 }
