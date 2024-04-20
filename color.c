@@ -58,16 +58,16 @@ color_t hsv_to_rgb(float hue, float saturation, float value) {
     return rgb;
 }
 
-color_t calculateRainbowColor(uint16_t changeRate){
+color_t calculateRainbowColor(float changeRate){
 	color_t color;
 
 	// Calculation of the phase angle based on the rate of change
-	float phaseAngle = changeRate / 51.0 * PI;
+	float phaseAngle = fmod(changeRate / 51.0 * PI, 2 * PI);
 
 	// Calculate color with sinus function
 	color.r = (uint8_t)(127.5 * (1 + sin(phaseAngle))); 			// red
-	color.g = (uint8_t)(127.5 * (1 + sin(phaseAngle + 2 * PI / 3))); // green
-	color.b = (uint8_t)(127.5 * (1 + sin(phaseAngle + 4 * PI / 3))); // blue
+	color.g = (uint8_t)(127.5 * (1 + sin(phaseAngle - PI / 3))); // green
+	color.b = (uint8_t)(127.5 * (1 + sin(phaseAngle - 2*PI / 3))); // blue
 
 	return color;
 }

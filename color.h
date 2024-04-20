@@ -48,7 +48,7 @@ color_t hsv_to_rgb(float hue, float saturation, float brightness);
  * @param changeRate is the factor for the color difference per led
  * @return color_t rainbow color for one led
  */
-color_t calculateRainbowColor(uint16_t phase);
+color_t calculateRainbowColor(float phase);
 
 /*
  * Fade from one color to the other in a given ratio. An interpolate function is used.
