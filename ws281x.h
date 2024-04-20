@@ -106,6 +106,11 @@ void ws281x_send();
 void ws281x_settOff();
 
 /*
+ * Clear stored led data in the array. Without updating the leds itself.
+ */
+void ws281x_clearLedData();
+
+/*
  * Set the RGB data for the led with given index.
  * The led is not updated until ws281x_send() is called.
  * @param LEDnum number of the led which color is to set

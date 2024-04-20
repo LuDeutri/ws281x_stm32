@@ -169,6 +169,10 @@ void ws281x_settOff(){
 	ws281x_send();
 }
 
+void ws281x_clearLedData(){
+	setAllLEDs(off);
+}
+
 uint16_t translateNumLeds_WS2811_WS2812(uint16_t numLed){
 	if(USE_WS2811){
 		// Be sure the given number can be devided by 3
