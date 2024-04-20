@@ -70,23 +70,59 @@ void fadeColors(color_t* color, size_t size, uint16_t firstLed, uint16_t numberO
 }
 
 float colorWheelPhase = 0;
-void rainbow(){
-
-	static uint32_t lastCycleTime = 0;
-	uint32_t currentTime = HAL_GetTick();
-
+void fadeColorWheel(){
+	static uint32_t lastFadeCycleTime = 0;
 	// Wait a little bit before changing the color of leds again. Adjust this to make the rainbow faster/slower
-	if (currentTime - lastCycleTime < RAINBOW_CYCLE_TIME)
-		return;
-	// If less than 3 leds are used, stop the method because no rainbow can be shown
-	if(numberLeds < 3)
+	if (HAL_GetTick() - lastFadeCycleTime < WHEEL_FADE_CYCLE_TIME)
 		return;
 
 	for(uint16_t i=0; i < numberLeds; i++){
-		setLED(i,calculateRainbowColor(colorWheelPhase));
-		colorWheelPhase += RAINBOW_COLOR_CHANGE_RATE / (float)numberLeds; // Change rate for all leds
+		setLED(i,calculateColorWheelColor(colorWheelPhase));
+		colorWheelPhase += WHEEL_FADE_COLOR_CHANGE_RATE / (float)numberLeds; // Change rate for all leds
    }
-    lastCycleTime = currentTime; // Update cycle time
+	lastFadeCycleTime = HAL_GetTick(); // Update cycle time
+}
+
+uint8_t rainbowRunIdx = 0;
+float rainbowColorRatio = 0.1f;
+static uint32_t lastRainbowCycleTime = 0;
+void rainbow(){
+	// Wait a little bit before update the rainbow again. Adjust this to make the rainbow faster/slower
+	if (HAL_GetTick() - lastRainbowCycleTime < RAINBOW_CYCLE_TIME)
+		return;
+
+	uint8_t colorIdx = 0 + rainbowRunIdx; // Move the rainbow colors
+
+	// Iterate about all leds and set the color data
+	for(uint16_t i=0; i < numberLeds; i+=RAINBOW_SAME_COLOR_LEDS){
+
+		// Set j leds with the same color
+		for(uint16_t j=0; j < RAINBOW_SAME_COLOR_LEDS; j++){
+			// First set the next target color for the given led
+			color_t targetColor;
+			// Check validity, if the index doesnt exist in the array start again with the first element
+			if(colorIdx >= colorRainbowRegSize-1)
+				targetColor = colorRainbowReg[0];
+			else targetColor = colorRainbowReg[colorIdx+1];
+
+			// Fade to the next color with interpolation
+			setLED(i+j,fadeToColor(colorRainbowReg[colorIdx], targetColor, rainbowColorRatio));
+		}
+		colorIdx++; // Switch to the next color for the next led
+		if(colorIdx > colorRainbowRegSize-1) // Check validity
+			colorIdx = 0;
+	}
+	rainbowColorRatio += 0.01f; // Raise interpolation value
+
+	if(rainbowColorRatio >= 0.9){ // Reset interpolation value if 90% of the next color is reached
+		rainbowColorRatio = 0;
+
+		// Shift the rainbow if the leds ended the interpolation about RAINBOW_SAME_COLOR_LEDS
+		rainbowRunIdx++;
+		if(rainbowRunIdx > colorRainbowRegSize-1) // Check for validity
+			rainbowRunIdx = 0;
+	}
+	lastRainbowCycleTime = HAL_GetTick(); // Update cycle time
 }
 
 uint32_t runningLightTime = 0;

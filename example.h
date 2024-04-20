@@ -15,26 +15,37 @@
 
 
 //  ------- Fade light simulation -----------
-// Time per brightness level
-#define FADE_TIME 30
+// Used for fadeOneColor(..), fadeOneColor(..), fadeAll()
+#define FADE_TIME 30 // Time per brightness level, a higher value makes the fade slower
+
+
+//  ------- Color wheel fade simulation -----------
+// Used for fadeColorWheel()
+// All leds lightning in the same color and are fading in different colors of the color wheel
+// depending of the defined change rate and the speed
+#define WHEEL_FADE_COLOR_CHANGE_RATE 0.2f // Higher value --> color difference per fade higher
+#define WHEEL_FADE_CYCLE_TIME  10 // Higher value --> slow rainbow color change
 
 
 //  ------- Rainbow simulation -----------
-// Number of leds which are showing the same color
-#define RAINBOW_COLOR_CHANGE_RATE 0.2f // Higher value --> color difference per led is higher
-#define RAINBOW_CYCLE_TIME  2 // Higher value --> slow rainbow color change
+// Used for rainbow()
+// Rainbow colors are moving in the strip
+// The used colors can be modified in color.c rainbowColorReg[].
+// Colors can be added or removed without any other necessary changes in the code.
+#define RAINBOW_CYCLE_TIME 10 // Higher value --> Rainbow moves slower
+#define RAINBOW_SAME_COLOR_LEDS 1 // Number of leds with the same color in the strip
 
 
 //  ------- Running light simulation -----------
+// Used for runningLight(..)
 #define RUNNING_LIGHT_TIME 100 // Time one led is lighting, lower value makes the light faster
 
 
 //  ------- Cyclone light simulation -----------
+// Used for cyclone()
 #define CYCLONE_RUN_DELAY 30 // Speed of the cyclone. Higher value --> faster cyclone
 #define CYCLONE_DIFFERENCE_PER_LED 0.5f // 0.05f ... 100 // Higher value increase the color difference per LED
 #define CYCLONE_COLOR_JUMP 6 //1 ... 10 // Higher value increase the color jump with the cyclone run
-
-
 
 
 /*
@@ -80,13 +91,22 @@ void fadeOneColor(color_t color, uint16_t firstLed, uint16_t numberOfLeds);
 void fadeColors(color_t color[], size_t size, uint16_t firstLed, uint16_t numberOfLeds);
 
 /*
- * Show rainbow led simulation. Colors are fixed in example.c setted and can be changed there.
- * RAINBOW_LED_SAME_COLOR defines the number of LEDs which show the same color
+ * All leds light in the same color and are fading in diffrent colors of the color wheel, depending on the defined change rate.
+ * With the defines for the rainbow fade simulation the speed and the color change rate can be adjusted.
+ */
+void fadeColorWheel();
+
+/*
+ * Show rainbow led simulation in one led strip.
+ * The used colors are stored in an array in color.c (rainbowColorReg).
+ * It is easily possible to change that array (remove or add colors). Other changes in the code are not necessary.
+ * The speed the rainbow is moving and the number of leds which lightning in the same color
+ * can be adjusted in the defined values above in this header file.
  */
 void rainbow();
 
 /*
- * Show a running light in the LED strip. RUNNING_LIGHT_TIME defines the time one LED is lightning
+ * Show a running light in the led strip. RUNNING_LIGHT_TIME defines the time one LED is lightning
  * @param color of the running light
  * @param offset at which led the running light should start
  * @param direction 1 running forward, -1 running backward. You can use 2,3,4,... or -2,-3,-4,... that leads to 2,3,4,... leds being skipped.
