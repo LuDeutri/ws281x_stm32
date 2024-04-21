@@ -11,7 +11,7 @@ approx. 234 Bits/Led
 + 50 KB RAM: 1,709 Leds (ws2811: 5,127 Leds)
 
 WS2811 use one controller for 3 Leds. Thats the reason why you can use 3x more leds.
-In ws281x.h NUM_LED must be the total number of the leds. It doesnt matter if ws2811 or 12 is used. The right number ob controller is calculated in ws281x_init().
+In ws281x.h NUM_LED must be the total number of the leds. It doesnt matter if ws2811 or 12 is used. The right number of controller is calculated in ws281x_init().
 
 
 ## To use this libary in your project you have to do following steps:
