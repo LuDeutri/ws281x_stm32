@@ -64,7 +64,7 @@
 // Can be reduced with running time analyze of your system
 #define RESET_PERIOD 50 // reset_period, 1.25µs * RESET_PERIOD, You need at least 50µs @800kHz (datasheet)
 
-#define NUM_LED 15				// Total number of leds, doesn't matter if WS2812 or WS2811
+#define NUM_LED 141				// Total number of leds, doesn't matter if WS2812 or WS2811
 #define ENABLE_BRIGHTNESS 1		// 1: enables brightness control of the leds, if deactivated it is always 100% (fading and other light simulations wont work)
 #define BRIGTHNESS_DEFAULT 40	// Default setted brightness, allowed value 0 - 45
 
@@ -74,12 +74,12 @@
  * You have to set the same adjustments in the .ioc
  *///-----------------------------------
 #define SYS_CLK 72000000 		// Sys clk frequence of the stm32 uC
-#define TIMER &htim1			// Used timer for the led data PWM signal
-#define TIMER_CHANNEL TIM_CHANNEL_1		// Used timer channel used for the led data PWM signal
+#define TIMER &htim2			// Used timer for the led data PWM signal
+#define TIMER_CHANNEL TIM_CHANNEL_4		// Used timer channel used for the led data PWM signal
 #define TIM_PRESCALER 0			// Prescaler settings in the .ioc
 #define TIM_ARR 90      		// (SYS_CLK / TIM_ARR) = 800 kHz (400kHz are possible too, read the documentation for the ws281x leds)
 
-extern TIM_HandleTypeDef htim1; // Timer used for the led data signal
+extern TIM_HandleTypeDef htim2; // Timer used for the led data signal
 
 
 
