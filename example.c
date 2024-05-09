@@ -125,30 +125,31 @@ void rainbow(){
 	lastRainbowCycleTime = HAL_GetTick(); // Update cycle time
 }
 
-uint32_t runningLightTime = 0;
-int32_t runningLightCounter = 0;
-bool runningLight(color_t color, uint16_t offset, int8_t direction, bool resetLeds){
+bool runningLight(color_t color, uint16_t offset, int8_t direction, bool resetLeds, uint32_t* runningLightTime, int32_t* runningLightCounter){
 
-	if(offset >= numberLeds) // Validate parameter input
+	offset = translateNumLeds_WS2811_WS2812(offset);
+
+	if(offset > numberLeds) // Validate parameter input
 		return false;
 	if(direction == 0)
 		return false;
 
-	if(HAL_GetTick() < runningLightTime + RUNNING_LIGHT_TIME) // Make the light faster/slower
+	if(HAL_GetTick() < *runningLightTime + RUNNING_LIGHT_TIME) // Make the light faster/slower
 		return false;
-	runningLightTime = HAL_GetTick();
+	*runningLightTime = HAL_GetTick();
 
 	// Reset Counter and start from beginning if led runs throw all leds
 	// Return true to give a signal that one cycle is finished
-	if(offset + runningLightCounter >= numberLeds){
-		runningLightCounter = 0;
+	if(offset + *runningLightCounter*direction > numberLeds){
+		*runningLightCounter = 0;
 		return true;
 	}
 
-	if(resetLeds) setAllLEDs(off); // Reset all led data
+	if(resetLeds)
+		setAllLEDs(off); // Reset all led data
 
-	setLED(offset + (runningLightCounter*direction), color); // Set the lightning led
-	runningLightCounter++;
+	setLED(offset + (*runningLightCounter*direction), color); // Set the lightning led
+	(*runningLightCounter)++;
 
 	return false;
 }

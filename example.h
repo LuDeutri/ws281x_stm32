@@ -32,7 +32,7 @@
 // Rainbow colors are moving in the strip
 // The used colors can be modified in color.c rainbowColorReg[].
 // Colors can be added or removed without any other necessary changes in the code.
-#define RAINBOW_CYCLE_TIME 10 // Higher value --> Rainbow moves slower
+#define RAINBOW_CYCLE_TIME 5 // Higher value --> Rainbow moves slower
 #define RAINBOW_SAME_COLOR_LEDS 1 // Number of leds with the same color in the strip
 
 
@@ -113,9 +113,11 @@ void rainbow();
  * 			0 will return in an error and stop the method
  * @param resetLeds if true all leds are set off in the method. If you want to use multiple
  * 			parallel running lights you must set it false and reset the leds before executing the methods for the running lights.
+ * @param runningLightTime initialize the variable with 0. Changes are not necessary. Its used for the method
+ * @param runningLightCounter initialize the variable with 0. Changes are not necessary. Its used for the method
  * @return true if one cycle is done, otherwise always false
  */
-bool runningLight(color_t color, uint16_t offset, int8_t direction, bool resetLeds);
+bool runningLight(color_t color, uint16_t offset, int8_t direction, bool resetLeds, uint32_t* runningLightTime, int32_t* runningLightCounter);
 
 /*
  * Cyclone light simulation is a running color change from the right to the left, back to the right,
